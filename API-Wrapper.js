@@ -3,30 +3,31 @@
 import axios from "axios";
 import dateFns from "date-fns";
 
-class Wrapper {
+
+export class UntisWrapper {
 
     // Variables
     school = "";
     schoolBase64 = "";
     username = "";
     password = "";
-    basurl = "";
-    coockies = "";
+    baseurl = "";
+    cookies = "";
     id = "";
     sessionInfo = "";
     anonymous = false;
     axios;
 
     // Constructor
-    constructor(school, username, password, basurl, identity = "Awesome", disableUserAgent = false) {
+    constructor(school, username, password, baseurl, identity = "Awesome", disableUserAgent = false) {
 
         // Set Variables
         this.school = school;
         this.schoolBase64 = "_" + btoa(this.school); // _ Symbol is needed for the API. btoa() is a function to encode the school name to base64.
         this.username = username;
         this.password = password;
-        this.basurl = "https://" + basurl + "/";
-        this.coockies = [];
+        this.baseurl = "https://" + baseurl + "/";
+        this.cookies = [];
         this.id = identity;
         this.sessionInfo = {};
         this.anonymous = false;
@@ -38,10 +39,10 @@ class Wrapper {
             // Set default User-Agent
             additionalHeaders["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) WebUntisAPIWrapper/1.0.0 Chrome/73.0.3683.103 Safari/537.36";
         }
-
+        console.log(`Logging in to ${this.baseurl} - School: ${this.school} (${this.schoolBase64}) - User: ${this.username}`)
         // Create Axios Instance
         this.axios = axios.create({
-            baseURL: this.basurl,
+            baseURL: this.baseurl,
             maxRedirects: 0,
             headers: {
                 "Cache-Control": "no-cache",
@@ -54,6 +55,10 @@ class Wrapper {
             }
         });
         
+    }
+
+    getInstance() {
+        return this;
     }
 
     // Login
@@ -108,12 +113,12 @@ class Wrapper {
         });
     }
 
-    // Building the coockies
+    // Building the cookies
     buildCookies() {
 
         const cookies = [];
-        cookies.push(serialize("JSESSIONID" + this.sessionInfo.sessionId));
-        cookies.push(serialize("schoolname" + this.schoolBase64));
+        cookies.push(serialize("JSESSIONID=" + this.sessionInfo.sessionId));
+        cookies.push(serialize("schoolname=" + this.schoolBase64));
         return cookies.join("; ");
     }
 
