@@ -8,7 +8,11 @@ export default class CalendarEntry {
         this.wrapper = instance;
     }
     fetch() {
-        var result = this.wrapper.axios.get(`https://${this.wrapper.baseurl}/api/rest/view/v1/calendar-entry/detail?elementId=${this.elementID}&elementType=${this.elementType}&homeworkOption=DUE`);
-        console.log(result);
+        try {
+            var result = this.wrapper.axios.get(`https://${this.wrapper.baseurl}/api/rest/view/v1/calendar-entry/detail?elementId=${this.elementID}&elementType=${this.elementType}&homeworkOption=DUE`);
+            console.log(result);
+        } catch (error) {
+            console.error("Error fetching calendar entry: ", error);
+        }
     }
 }
